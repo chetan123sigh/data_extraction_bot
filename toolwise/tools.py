@@ -187,58 +187,12 @@ TOOL_FUNCTIONS = {
     "web_search": web_search,
 }
 
-
 TOOL_DEFINITIONS = [
-    {
-        "type": "function",
-        "function": {
-            "name": "get_weather",
-            "description": "Get current weather for a city. Use for weather or temperature questions.",
-            "parameters": {
-                "type": "object",
-                "properties": {"city": {"type": "string", "description": "City name, e.g. Jaipur"}},
-                "required": ["city"],
-            },
-        },
-    },
-    {
-        "type": "function",
-        "function": {
-            "name": "get_stock_price",
-            "description": "Get the latest available closing price for a stock ticker. Examples: AAPL, MSFT, RELIANCE.NS.",
-            "parameters": {
-                "type": "object",
-                "properties": {"symbol": {"type": "string", "description": "Stock ticker symbol"}},
-                "required": ["symbol"],
-            },
-        },
-    },
-    {
-        "type": "function",
-        "function": {
-            "name": "calculate",
-            "description": "Calculate arithmetic accurately. Supports +, -, *, /, //, %, ** and parentheses.",
-            "parameters": {
-                "type": "object",
-                "properties": {"expression": {"type": "string", "description": "Arithmetic expression, e.g. (8000 * 25) / 100"}},
-                "required": ["expression"],
-            },
-        },
-    },
-    {
-        "type": "function",
-        "function": {
-            "name": "web_search",
-            "description": "Search the web for current or specific information that needs external sources.",
-            "parameters": {
-                "type": "object",
-                "properties": {"query": {"type": "string", "description": "Concise web search query"}},
-                "required": ["query"],
-            },
-        },
-    },
+    {"type": "function", "name": "get_weather", "description": "Get current weather for a city. Use for weather or temperature questions.", "parameters": {"type": "object", "properties": {"city": {"type": "string", "description": "City name, e.g. Jaipur"}}, "required": ["city"], "additionalProperties": False, "strict": True}},
+    {"type": "function", "name": "get_stock_price", "description": "Get the latest available closing price for a stock ticker. Examples: AAPL, MSFT, RELIANCE.NS.", "parameters": {"type": "object", "properties": {"symbol": {"type": "string", "description": "Stock ticker symbol"}}, "required": ["symbol"], "additionalProperties": False, "strict": True}},
+    {"type": "function", "name": "calculate", "description": "Calculate a basic arithmetic expression accurately. Supports +, -, *, /, //, %, ** and parentheses.", "parameters": {"type": "object", "properties": {"expression": {"type": "string", "description": "Arithmetic expression, e.g. (8000 * 25) / 100"}}, "required": ["expression"], "additionalProperties": False, "strict": True}},
+    {"type": "function", "name": "web_search", "description": "Search the web for current or specific information that needs external sources. Use when the other tools do not fit.", "parameters": {"type": "object", "properties": {"query": {"type": "string", "description": "Concise web search query"}}, "required": ["query"], "additionalProperties": False, "strict": True}},
 ]
-
 
 
 def run_tool(name: str, arguments: dict[str, Any]) -> dict[str, Any]:

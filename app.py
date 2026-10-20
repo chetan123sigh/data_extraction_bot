@@ -10,7 +10,7 @@ load_dotenv(Path(__file__).resolve().parent / ".env")
 
 st.set_page_config(page_title="ToolWise AI", page_icon="🧰", layout="centered")
 st.title("🧰 ToolWise AI")
-st.caption("An AI agent that chooses and runs tools for weather, stocks, calculations, and web search.")
+st.caption("An OpenAI-powered LangChain agent that chooses and runs Python tools for weather, stocks, calculations, and web search.")
 
 with st.sidebar:
     st.header("Available tools")

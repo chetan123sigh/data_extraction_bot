@@ -1,239 +1,155 @@
-# ToolWise AI 🤖
+# ToolWise AI — OpenAI + LangChain Agent with Tools
 
-**ToolWise AI** is an AI-powered assistant that can use external tools to answer questions and perform tasks. Instead of relying only on an LLM's generated response, the agent can call tools for calculations, weather information, stock prices, and web searches.
+ToolWise AI is a Python chatbot that uses an OpenAI model through **LangChain Agents** and OpenAI-compatible tool/function calling to choose and execute specific Python functions. It includes a Streamlit chat interface and a terminal interface.
 
-Built with Python, Streamlit, and Ollama, this project can run locally without a paid LLM API key.
+## Features
 
-## ✨ Features
+- **OpenAI + LangChain agent:** the model chooses a tool based on the user's intent; Python executes the selected function and returns its result to the agent.
+- **Weather:** current conditions by city using Open-Meteo (no API key required).
+- **Stock lookup:** latest available closing price using `yfinance`; this is not guaranteed to be a live quote.
+- **Calculator:** arithmetic evaluated with a restricted Python AST allow-list, never `eval()`.
+- **Web search:** DuckDuckGo search results with source URLs; availability can vary.
+- **Streamlit UI and CLI:** use the browser interface or terminal.
+- **Error handling:** empty/oversized input checks, tool argument validation, network timeouts, provider/rate-limit messages, and bounded agent iterations.
+- **Tests:** unit tests run without making live OpenAI requests or relying on live data services.
 
-- **AI Agent:** Uses an LLM to decide when to call tools.
-- **Calculator:** Evaluates supported mathematical expressions.
-- **Weather:** Retrieves current weather information for a city.
-- **Stock Lookup:** Retrieves available stock-price data using Yahoo Finance.
-- **Web Search:** Searches the web for relevant information.
-- **Local AI:** Runs supported language models using Ollama.
-- **Streamlit UI:** Provides a browser-based interface.
-- **CLI:** Includes a command-line entry point.
-- **Tests:** Includes automated tests for project functionality.
+## Requirements
 
-## 🛠️ Tech Stack
+- Python 3.10+ (Python 3.11 recommended).
+- An OpenAI API key with API access and available billing/quota. ChatGPT Go/Plus subscriptions do not automatically include API credits.
+- Internet access for OpenAI and external data tools.
 
-- Python
-- Ollama
-- OpenAI-compatible Python client
-- Streamlit
-- Open-Meteo
-- yfinance
-- DuckDuckGo Search
-- Pytest
+## Setup on Windows 10/11
 
-## 📋 Prerequisites
+1. Extract the project and open the `multi_ai` folder in VS Code.
+2. Open **Terminal → New Terminal** and create a virtual environment:
 
-Install the following before running the project:
+   ```powershell
+   py -m venv .venv
+   .\.venv\Scripts\Activate.ps1
+   ```
 
-1. **Python 3.10 or newer**
-2. **Git**
-3. **Ollama** — [Download Ollama](https://ollama.com/download)
+   If PowerShell blocks activation, run this in the same terminal and activate again:
 
-A compatible local language model must be downloaded before starting the agent. Model performance depends on your computer's available RAM and hardware.
+   ```powershell
+   Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+   .\.venv\Scripts\Activate.ps1
+   ```
 
-## 🚀 Installation and Setup
+3. Install dependencies:
 
-### 1. Download the project
+   ```powershell
+   python -m pip install --upgrade pip
+   python -m pip install -r requirements.txt
+   ```
 
-Clone the repository using its GitHub URL:
+4. Create `.env` from the example:
 
-```bash
-git clone https://github.com/YOUR-USERNAME/YOUR-REPOSITORY.git
-cd YOUR-REPOSITORY
-```
+   ```powershell
+   Copy-Item .env.example .env
+   ```
 
-Replace `YOUR-USERNAME` and `YOUR-REPOSITORY` with the actual GitHub username and repository name.
+5. Open `.env` and set your real OpenAI API key:
 
-Alternatively, download the repository as a ZIP file from GitHub and extract it.
+   ```dotenv
+   OPENAI_API_KEY=your_real_openai_api_key
+   OPENAI_MODEL=gpt-4.1-mini
+   ```
 
-### 2. Create a virtual environment
+   Do not add quotes unless your key requires them. Never share the key, paste it into source files, or commit `.env` to GitHub. `.gitignore` excludes `.env`.
 
-**Windows — Git Bash:**
+## Run the Streamlit app
 
-```bash
-python -m venv .venv
-source .venv/Scripts/activate
-```
+With the virtual environment activated and `.env` configured:
 
-**Windows — Command Prompt:**
-
-```bat
-python -m venv .venv
-.venv\Scripts\activate
-```
-
-**macOS / Linux:**
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-```
-
-### 3. Install dependencies
-
-Run this command from the project root directory:
-
-```bash
-python -m pip install -r requirements.txt
-```
-
-### 4. Install and start a local AI model
-
-Open a terminal and download the default model:
-
-```bash
-ollama pull llama3.2:3b
-```
-
-Ollama usually runs in the background after installation. If it is not running, start its server in a separate terminal:
-
-```bash
-ollama serve
-```
-
-If you see an error saying port `11434` is already in use, Ollama may already be running. Do not start a second server.
-
-Keep Ollama running while using ToolWise AI.
-
-### 5. Configure environment variables
-
-Create a file named `.env` in the project root, next to `app.py`.
-
-Add:
-
-```env
-OPENAI_API_KEY=ollama
-OPENAI_MODEL=llama3.2:3b
-```
-
-**Important:** `ollama` is a placeholder value required by the OpenAI-compatible client in this local configuration. It is not a real API key.
-
-You do not need a paid OpenAI API key for local Ollama inference.
-
-Do not upload your `.env` file or any real API keys to GitHub.
-
-### 6. Run the application
-
-Make sure your virtual environment is activated and Ollama is running. From the project root, execute:
-
-```bash
+```powershell
 streamlit run app.py
 ```
 
-Open the local URL displayed in your terminal, usually:
+Open the local URL printed by Streamlit, usually `http://localhost:8501`.
 
-```text
-http://localhost:8501
-```
+## Run the CLI
 
-### 7. Run the command-line interface
-
-To explore the CLI entry point, run:
-
-```bash
+```powershell
 python cli.py
 ```
 
-Follow the prompts displayed by the application.
+Type `exit` or `quit` to stop.
 
-## 🧪 Testing
+## Example prompts
 
-Run the automated test suite from the project root:
+- `What's the weather in Jaipur?`
+- `Calculate 25% of 8000.`
+- `Get the latest available closing price for AAPL.`
+- `Get the latest available closing price for RELIANCE.NS.`
+- `Search the web for the latest Python release.`
+- `What's the weather in Delhi and calculate 15 * 24?`
 
-```bash
+## How tool calling works
+
+1. The user sends a message.
+2. The OpenAI model, orchestrated by a LangChain agent, decides whether a tool is needed and chooses its name and arguments.
+3. LangChain validates and dispatches the tool call to a Python function.
+4. The function returns structured data or a clear error result.
+5. The agent uses that result to answer the user. The UI can show which tools were called and their results.
+
+The model does not execute arbitrary Python. The calculator parses an expression into an AST and only allows numeric constants, parentheses, and a small allow-list of arithmetic operators.
+
+## Run tests
+
+```powershell
 python -m pytest -v
 ```
 
-Tests may cover tool functionality, agent behavior, input handling, and error cases.
+Unit tests do not call the OpenAI API or external data services. A separate manual smoke test with a valid API key is needed to verify the complete live integration. API requests may incur charges.
 
-## 💬 Example Prompts
+## Environment variables
 
-Try these prompts in the application:
+| Variable | Required | Default | Purpose |
+|---|---|---|---|
+| `OPENAI_API_KEY` | Yes | None | Secret used for OpenAI API requests |
+| `OPENAI_MODEL` | No | `gpt-4.1-mini` | OpenAI model used by LangChain |
 
-- `Calculate 125 * 48.`
-- `Get the current weather in Jaipur.`
-- `Find the latest available closing price of AAPL.`
-- `Search the web for the latest Python release and provide its source URL.`
+Weather uses Open-Meteo. Stock data comes from Yahoo Finance through `yfinance`. Web search uses DuckDuckGo through `ddgs`. Those providers may be unavailable or rate-limited.
 
-The agent should select the relevant tool when appropriate. Results from weather, financial data, and web searches depend on the external services and their available data.
-
-## 📁 Project Structure
+## Project structure
 
 ```text
 multi_ai/
-├── app.py                 # Streamlit application
-├── cli.py                 # Command-line interface
-├── requirements.txt       # Python dependencies
-├── README.md              # Project documentation
-├── LICENSE
-├── tests/                 # Automated tests
-└── toolwise/
-    ├── agent.py           # AI agent and tool-calling loop
-    └── tools.py           # Tool definitions and implementations
+├── app.py                 # Streamlit chat UI
+├── cli.py                 # Terminal interface
+├── requirements.txt        # OpenAI, LangChain, tools, and test dependencies
+├── .env.example           # Environment variable template; no secrets
+├── .gitignore             # Excludes .env and generated files
+├── README.md
+├── toolwise/
+│   ├── __init__.py
+│   ├── agent.py            # LangChain agent + OpenAI model/tool calling
+│   └── tools.py            # Weather, stocks, calculator, web search
+└── tests/
+    ├── test_agent.py
+    └── test_tools.py
 ```
 
-## 🔧 Troubleshooting
+## Limitations and responsible use
 
-### Ollama connection error
+- Stock quotes may be delayed and are not financial advice.
+- Weather is a current-conditions snapshot, not a guarantee of future weather.
+- Search results are supplied by a third-party provider and should be checked against their original sources.
+- OpenAI calls require internet access, a valid API key, and available account quota.
+- Agent execution is capped to limit repeated tool calls.
+- Never commit API keys or other secrets.
 
-- Ensure Ollama is installed and running.
-- Check that the local API is reachable at `http://localhost:11434`.
-- If necessary, start the server with `ollama serve`.
+## Troubleshooting
 
-### Model not found
+- **`OPENAI_API_KEY is not configured`:** check that `.env` is in the same directory as `app.py` and contains your key, then restart the app.
+- **HTTP 401:** verify the API key is correct and active.
+- **HTTP 429 / quota:** check OpenAI API billing and rate limits, then wait and retry.
+- **Model not found / unsupported model:** confirm the model name is available to your API account.
+- **Weather unavailable:** check internet connectivity and retry later.
+- **Stock unavailable:** verify the ticker (for example, Indian tickers often end in `.NS`) and retry later.
+- **Search unavailable:** DuckDuckGo may throttle requests; retry later.
 
-Download the configured model:
+## GitHub safety
 
-```bash
-ollama pull llama3.2:3b
-```
-
-Make sure `OPENAI_MODEL` in `.env` matches the model name installed in Ollama.
-
-### Python module not found
-
-Activate the virtual environment and reinstall dependencies:
-
-```bash
-python -m pip install -r requirements.txt
-```
-
-### Streamlit command not found
-
-With the virtual environment activated, try:
-
-```bash
-python -m streamlit run app.py
-```
-
-### Weather, stock, or web-search errors
-
-These tools rely on external services. Check your internet connection and retry. Stock data availability and web-search results may vary.
-
-## 💰 Cost
-
-The default configuration uses a local Ollama model, so it does not require a paid LLM API key or incur per-request cloud inference charges. You still need a computer capable of running the model, and your electricity and internet usage may have their own costs.
-
-Other services and models may have separate terms, limits, or charges if you change the configuration.
-
-## 🔐 Privacy
-
-With local Ollama inference, model prompts are processed by the local model server. However, weather, stock, and web-search tools send relevant queries to their respective external services. Avoid submitting passwords, private keys, or other sensitive information.
-
-## 📌 Future Improvements
-
-Potential enhancements include:
-
-- More tools and integrations
-- Improved agent memory
-- Stronger input validation and error handling
-- More automated tests
-- Better logging and observability
-- Additional local and cloud model options
-
+Before pushing, confirm `.env` is not staged or tracked. Commit `.env.example`, source code, tests, and documentation only. Do not push automatically; decide when you are ready.
