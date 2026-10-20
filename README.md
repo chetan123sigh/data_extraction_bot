@@ -130,26 +130,3 @@ multi_ai/
     ├── test_agent.py
     └── test_tools.py
 ```
-
-## Limitations and responsible use
-
-- Stock quotes may be delayed and are not financial advice.
-- Weather is a current-conditions snapshot, not a guarantee of future weather.
-- Search results are supplied by a third-party provider and should be checked against their original sources.
-- OpenAI calls require internet access, a valid API key, and available account quota.
-- Agent execution is capped to limit repeated tool calls.
-- Never commit API keys or other secrets.
-
-## Troubleshooting
-
-- **`OPENAI_API_KEY is not configured`:** check that `.env` is in the same directory as `app.py` and contains your key, then restart the app.
-- **HTTP 401:** verify the API key is correct and active.
-- **HTTP 429 / quota:** check OpenAI API billing and rate limits, then wait and retry.
-- **Model not found / unsupported model:** confirm the model name is available to your API account.
-- **Weather unavailable:** check internet connectivity and retry later.
-- **Stock unavailable:** verify the ticker (for example, Indian tickers often end in `.NS`) and retry later.
-- **Search unavailable:** DuckDuckGo may throttle requests; retry later.
-
-## GitHub safety
-
-Before pushing, confirm `.env` is not staged or tracked. Commit `.env.example`, source code, tests, and documentation only. Do not push automatically; decide when you are ready.
